@@ -1,0 +1,5 @@
+{"question": "What are the symptoms of type 2 diabetes?", "ground_truth": "Common symptoms of type 2 diabetes include increased thirst, frequent urination, fatigue, blurred vision, and slow healing of wounds."}
+{"question": "How does metformin work in treating diabetes?", "ground_truth": "Metformin works by reducing glucose production in the liver and improving insulin sensitivity in muscle cells."}
+{"question": "What is the relationship between obesity and insulin resistance?", "ground_truth": "Obesity, particularly visceral fat, promotes insulin resistance through inflammatory pathways and altered adipokine secretion."}
+{"question": "What are the cardiovascular effects of long-term corticosteroid use?", "ground_truth": "Long-term corticosteroid use is associated with hypertension, dyslipidemia, and increased cardiovascular risk."}
+{"question": "Does smoking cessation improve lung function in COPD patients?", "ground_truth": "Smoking cessation slows the decline in FEV1 in COPD patients compared to continued smoking."}
