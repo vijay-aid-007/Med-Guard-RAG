@@ -209,6 +209,42 @@ def load_pubmedqa(limit: int = 5000) -> list[dict]:
     logger.info(f"Loaded {len(docs)} PubMedQA documents")
     return docs
 
+def load_pubmed_abstracts(limit: int = 10000) -> list[dict]:
+    """
+    PubMed abstracts — pure medical knowledge text.
+    Better for retrieval than Q&A format because:
+    - No question noise
+    - Dense factual content
+    - Matches answer-shaped text in FAISS
+    """
+    logger.info("Loading PubMed abstracts...")
+    try:
+        rows = _load("ncats/pubmed_abstracts", None, "train", limit)
+    except Exception:
+        try:
+            rows = _load("ccdv/pubmed-summarization", None, "train", limit)
+        except Exception as e:
+            logger.warning(f"PubMed abstracts load failed: {e} — skipping")
+            return []
+
+    docs = []
+    for i, row in enumerate(rows):
+        row_: dict = dict(row)
+        abstract = str(row_.get("abstract") or row_.get("article") or "").strip()
+        title    = str(row_.get("title") or "").strip()
+        if not abstract or len(abstract) < 50:
+            continue
+        full_text = f"{title}\n\n{abstract}" if title else abstract
+        docs.append({
+            "id":       f"pubmed_abstract_{i}",
+            "text":     full_text,
+            "source":   "PubMedAbstract",
+            "metadata": {"type": "abstract"},
+        })
+
+    logger.info(f"Loaded {len(docs)} PubMed abstracts")
+    return docs
+
 
 def load_medmcqa(limit: int = 20000) -> list[dict]:
     """
@@ -224,7 +260,7 @@ def load_medmcqa(limit: int = 20000) -> list[dict]:
     for row in rows:
         row_: dict[str, Any] = dict(row)
         explanation: str = str(row_.get("exp") or "").strip()
-        if not explanation:
+        if not explanation.strip() or len(explanation.strip()) < 20:
             continue                          # skip rows with no explanation
 
         correct_key    = opt_map.get(int(row_.get("cop") or -1), "")
@@ -270,7 +306,7 @@ def load_medqa(limit: int = 10000) -> list[dict]:
         if not question or not answer:
             continue
 
-        full_text = (
+        full_text = ( 
             f"Question: {question}\n\n"
             f"Answer: {answer}"
         )
@@ -285,6 +321,9 @@ def load_medqa(limit: int = 10000) -> list[dict]:
     return docs
 
 
+
+
+
 def save_jsonl(docs: list[dict], filename: str) -> None:
     path = RAW_DIR / filename
     with open(path, "w", encoding="utf-8") as f:
@@ -296,10 +335,10 @@ def save_jsonl(docs: list[dict], filename: str) -> None:
 def main() -> None:
     combined_path = RAW_DIR / "combined_corpus.jsonl"
 
+    # Delete old corpus to force rebuild
     if combined_path.exists():
-        count = sum(1 for _ in open(combined_path, encoding="utf-8"))
-        logger.info(f"Corpus exists: {count} docs. Delete to rebuild.")
-        return
+        combined_path.unlink()
+        logger.info("Deleted old corpus — rebuilding...")
 
     total = 0
     with open(combined_path, "w", encoding="utf-8") as out:
@@ -313,6 +352,10 @@ def main() -> None:
             total += 1
 
         for doc in load_medqa(limit=10000):
+            out.write(json.dumps(doc, ensure_ascii=False) + "\n")
+            total += 1
+
+        for doc in load_pubmed_abstracts(limit=10000):
             out.write(json.dumps(doc, ensure_ascii=False) + "\n")
             total += 1
 

@@ -35,30 +35,21 @@ PROCESSED_DIR = Path("data/processed")
 PROCESSED_DIR.mkdir(parents= True, exist_ok=True)
 
 
-def _split_text(
-        text: str,
-        chunk_size : int,
-        overlap: int
-) -> list[str]:
-    words = text.split()
+# After ✅ — sentence-aware splitting
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-    #Document fits in one chunk — retrun as-is
-    if len(words) <= chunk_size:
-        return [text]
-    
+def _get_splitter(chunk_size: int, overlap: int) -> RecursiveCharacterTextSplitter:
+    return RecursiveCharacterTextSplitter(
+        chunk_size    = chunk_size * 5,  # convert words→chars (~5 chars/word)
+        chunk_overlap = overlap * 5,
+        separators    = ["\n\n", "\n", ". ", "? ", "! ", " ", ""],
+        length_function = len,
+    )
 
-    chunks = []
-    start = 0 
-
-    while start < len(words):
-        end = start + chunk_size
-        chunk = " ".join(words[start:end])
-        chunks.append(chunk)
-
-        if end >= len(words):
-            break
-        start = end - overlap
-    return chunks
+def _split_text(text: str, chunk_size: int, overlap: int) -> list[str]:
+    splitter = _get_splitter(chunk_size, overlap)
+    chunks   = splitter.split_text(text)
+    return chunks if chunks else [text]
 
 
 

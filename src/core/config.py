@@ -5,9 +5,11 @@ class Settings(BaseSettings):
     
     #_____LLM________________________________________________
     ollama_base_url: str = Field(default= "http://localhost:11434")
-    llm_model: str = Field(default="phi3:mini")
+    llm_model: str = Field(default="openai/gpt-oss-120b")
     llm_temperature: float = Field(default=0.3)
     llm_max_tokens: int = Field(default=512)
+    llm_provider:    str = Field(default="groq") 
+    groq_api_key:    str = Field(default="")  
 
     #_____Embeddings_________________________________________
     embedding_model: str = Field(

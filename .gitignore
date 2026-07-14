@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.pyc
+
+# Environment
+.env
+src/.env
+
+# Logs
+logs/
+
+# FAISS
+data/faiss_index/
+
+# Processed data
+data/processed/
+
+
+
+
+# Python
+__pycache__/
+*.pyc
+
+# Environment
+.env
+src/.env
+
+# Logs
+logs/
+
+# FAISS
+data/faiss_index/
+
+# Processed data
+data/processed/
