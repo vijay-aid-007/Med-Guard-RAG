@@ -1,0 +1,93 @@
+# ═══════════════════════════════════════════════════════════════════
+# MedGuard — Guardrail Patterns
+# Production-grade regex patterns for jailbreak and harmful content
+# detection. Update this file without touching code.
+#
+# Pattern syntax: Python re module (re.search, case-insensitive)
+# Ops team can add patterns here — no redeploy needed.
+# ═══════════════════════════════════════════════════════════════════
+
+jailbreak:
+  # ── Instruction Override Attacks ──────────────────────────────────
+  - "ignore (all )?(previous|prior|above|your) instructions"
+  - "disregard (your|all|any) (previous |prior )?(safety|guidelines|rules|instructions|constraints)"
+  - "forget (all |your )?(previous |prior )?(instructions|rules|guidelines|constraints)"
+  - "override (your )?(safety|guidelines|rules|instructions|system)"
+  - "bypass (your )?(safety|filter|restriction|guideline|rule)"
+  - "skip (your )?(safety|filter|restriction|guideline|rule)"
+
+  # ── Persona / Mode Switching ───────────────────────────────────────
+  - "you are now (in )?(dan|developer|god|jailbreak|unrestricted|evil) mode"
+  - "pretend (you are|to be) (an? )?(unfiltered|uncensored|jailbroken|evil|unrestricted|different)"
+  - "act as (if you have )?no (restrictions|filters|rules|guidelines|safety)"
+  - "act as (an? )?(unrestricted|uncensored|unfiltered|evil|malicious|rogue) (ai|assistant|model|bot)"
+  - "switch (to|into) (developer|dan|unrestricted|jailbreak|evil|god) mode"
+  - "enable (developer|unrestricted|jailbreak|dan|god) mode"
+  - "you (are|were) (now |)(freed|free|uncensored|unfiltered|jailbroken)"
+  - "your (true |real )?(self|nature|identity) (is|has no) (restriction|filter|limit)"
+
+  # ── System Prompt Extraction ───────────────────────────────────────
+  - "reveal (your|the) (instructions|prompt|system message|system prompt|context)"
+  - "show (me |)(your|the) (instructions|prompt|system message|system prompt)"
+  - "what (are|is) (your|the) (instructions|prompt|system message|system prompt)"
+  - "repeat (your|the) (instructions|prompt|system message|system prompt)"
+  - "print (your|the) (instructions|prompt|system message|system prompt)"
+  - "output (your|the) (instructions|prompt|system message|system prompt)"
+  - "display (your|the) (instructions|prompt|system message|system prompt)"
+  - "tell me (your|the) (instructions|prompt|system message|system prompt)"
+
+  # ── Role Play Exploits ─────────────────────────────────────────────
+  - "let('s| us) (play|do) a (role.?play|game|scenario) where you (have no|ignore)"
+  - "for (this |the )?(game|roleplay|story|fiction|scenario).{0,30}(ignore|bypass|forget)"
+  - "in (this |the )?(story|fiction|roleplay|scenario).{0,30}(no rules|no restrictions)"
+  - "hypothetically (speaking.{0,20})?(how|what|tell)"
+  - "imagine (you are|you were|there are) no (rules|restrictions|filters|guidelines)"
+
+  # ── Prompt Injection via Content ───────────────────────────────────
+  - "\\[system\\]"
+  - "\\[assistant\\]"
+  - "<\\|system\\|>"
+  - "<\\|im_start\\|>"
+  - "###\\s*(instruction|system|human|assistant)"
+  - "\\{\\{.*\\}\\}"
+
+  # ── Token/Encoding Tricks ──────────────────────────────────────────
+  - "base64.*decode"
+  - "translate (this|the following) (from|to) base64"
+  - "rot13"
+
+harmful:
+  # ── Weapons & Explosives ───────────────────────────────────────────
+  - "how (do|can|to) (i |)(make|build|create|synthesize|assemble) (a |an )?(bomb|explosive|ied|grenade|weapon|gun|firearm)"
+  - "how (do|can|to) (i |)(acquire|get|obtain|buy) (illegal |unregistered )?(gun|firearm|weapon|explosive)"
+  - "instructions (for|to) (make|build|create) (a |an )?(bomb|explosive|weapon)"
+
+  # ── Poison & Chemical Weapons ──────────────────────────────────────
+  - "how (do|can|to) (i |)(make|synthesize|create|produce) (a |)(poison|toxin|nerve agent|chemical weapon|ricin|sarin|vx gas)"
+  - "lethal (dose|amount|concentration) of .{0,30}(medication|drug|substance|poison|chemical)"
+  - "how much .{0,30}(to|will|can) (kill|be lethal|cause death|overdose)"
+  - "how (many|much) .{0,20}(pills|tablets|capsules|mg) (to|will) (kill|overdose|be fatal|cause death)"
+
+  # ── Self Harm & Suicide ────────────────────────────────────────────
+  - "how to (harm|hurt|kill|end) (myself|my life|yourself)"
+  - "best (way|method|means) to (commit suicide|kill (myself|yourself)|end (my|a) life)"
+  - "painless (way|method) to (die|commit suicide|end life)"
+  - "suicide (method|plan|note|attempt)"
+  - "want to (die|kill myself|end my life|not (be alive|exist))"
+
+  # ── Violence Against Others ────────────────────────────────────────
+  - "how to (harm|hurt|kill|poison|attack) (someone|a person|people|my|an)"
+  - "how (do|can) i (get rid of|eliminate|harm|hurt|kill) (someone|a person|my)"
+  - "untraceable (poison|method|way) to (kill|harm|hurt)"
+
+  # ── Drug Synthesis ─────────────────────────────────────────────────
+  - "how (do|can|to) (i |)(make|synthesize|produce|manufacture|cook) (meth|methamphetamine|heroin|fentanyl|cocaine|mdma|lsd)"
+  - "synthesis (of|for) (meth|methamphetamine|heroin|fentanyl|cocaine|mdma)"
+  - "drug (synthesis|manufacturing|production) (guide|instructions|steps)"
+
+  # ── Medical Misuse ─────────────────────────────────────────────────
+  - "how to (fake|simulate|pretend to have) (symptoms|illness|disease) (to get|for) (drugs|medication|prescription)"
+  - "how to (get|obtain|acquire) (opioids|opiates|benzodiazepines|controlled substances) without (prescription|doctor)"
+  - "doctor shopping (for|to get) (drugs|medication|prescription|opioids)"
+  - "lethal (dose|amount|concentration) of"
+  - "how (much|many) .{0,20}(pills|tablets) (to|will) (kill|overdose)"

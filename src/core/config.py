@@ -24,7 +24,7 @@ class Settings(BaseSettings):
 
     #_____Retrieval___________________________________________
     retrieval_top_k: int = Field(default=20)
-    rerank_top_k : int = Field(default=9)
+    rerank_top_k : int = Field(default=10)
     chunk_size:  int = Field(default=512)
     chunk_overlap: int = Field(default=64)
 
@@ -58,6 +58,9 @@ class Settings(BaseSettings):
         env_file = ".env",
         env_file_encoding = "utf-8"
     )
+
+    #____Input_Guard____________________________________________
+    input_similarity_threshold: float = Field(default=0.50)
 
 
 settings = Settings()
