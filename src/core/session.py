@@ -4,7 +4,6 @@ from typing import Any
 import redis
 
 from src.core.config         import settings
-from src.core.logging_config import logger
 
 _redis_client: redis.Redis | None = None  # type: ignore[type-arg]
 

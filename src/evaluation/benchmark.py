@@ -72,7 +72,7 @@ def run_benchmark(
         logger.error(f"{p} not found")
         return {}
 
-    questions = [json.loads(l) for l in open(p, encoding="utf-8")]
+    questions = [json.loads(line) for line in open(p, encoding="utf-8")]
     logger.info(f"Benchmarking {len(questions)} questions")
 
     correct = blocked = handoff = 0

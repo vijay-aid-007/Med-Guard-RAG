@@ -30,13 +30,14 @@ from pathlib import Path
 from src.core.config import settings
 from src.core.logging_config import logger
 
+#sentence-aware splitting
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+
 
 PROCESSED_DIR = Path("data/processed")
 PROCESSED_DIR.mkdir(parents= True, exist_ok=True)
 
 
-# After ✅ — sentence-aware splitting
-from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 def _get_splitter(chunk_size: int, overlap: int) -> RecursiveCharacterTextSplitter:
     return RecursiveCharacterTextSplitter(

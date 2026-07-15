@@ -36,7 +36,6 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 from src.core.config import settings
 from src.core.logging_config import logger
-from typing import cast
 
 _embedding_model: SentenceTransformer | None = None
 

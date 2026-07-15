@@ -8,7 +8,6 @@ from src.retrieval.retriever        import get_retriever
 from src.retrieval.reranker         import get_reranker
 from src.generation.prompt_builder  import build_prompt
 from src.generation.llm_client      import get_llm_client
-from src.core.logging_config        import logger
 
 CANNED_FALLBACK  = (
     "I can't help with that. Please rephrase or "

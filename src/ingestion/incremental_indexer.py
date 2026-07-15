@@ -25,7 +25,6 @@ import pickle
 from pathlib import Path
 
 import faiss
-import numpy as np
 
 from src.core.config import settings
 from src.core.logging_config import logger
@@ -40,7 +39,7 @@ def incremental_index(new_chunks_path: str) -> None:
         logger.error(f"New chunks file not found: {path}")
         return
 
-    new_chunks = [json.loads(l) for l in open(path, encoding="utf-8")]
+    new_chunks = [json.loads(line) for line in open(path, encoding="utf-8")]
     if not new_chunks:
         logger.warning("No chunks found in file — nothing to add")
         return
@@ -103,7 +102,7 @@ def incremental_index(new_chunks_path: str) -> None:
         pickle.dump(metadata, f)
 
     after = index.ntotal
-    logger.info(f"Incremental index complete:")
+    logger.info("Incremental index complete:")
     logger.info(f"  Before : {before} vectors")
     logger.info(f"  Added  : {len(new_chunks)} vectors")
     logger.info(f"  After  : {after} vectors")
