@@ -121,3 +121,48 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     incremental_index(args.source)
+
+
+
+
+
+
+
+
+
+"""
+# Step 1 — Generate only new chunks
+python -c "
+import json
+from src.ingestion.loader import load_pubmed_abstracts, save_jsonl
+docs = load_pubmed_abstracts(limit=20000)
+new_docs = docs[10000:]  # skip first 10k already indexed
+save_jsonl(new_docs, 'pubmed_extra.jsonl')
+print('New docs:', len(new_docs))
+"
+
+# Step 2 — Chunk them
+python -c "
+import json
+from src.ingestion.chunker import chunk_documents
+docs   = [json.loads(l) for l in open('data/raw/pubmed_extra.jsonl')]
+chunks = chunk_documents(docs)
+with open('data/processed/new_chunks.jsonl', 'w', encoding='utf-8') as f:
+    for c in chunks:
+        f.write(json.dumps(c, ensure_ascii=False) + '\n')
+print('New chunks:', len(chunks))
+"
+
+# Step 3 — Incremental index
+python -m src.ingestion.incremental_indexer --source data/processed/new_chunks.jsonl
+
+# Step 4 — Verify
+python -c "
+import faiss, pickle
+idx  = faiss.read_index('./data/faiss_index/medguard.index')
+meta = pickle.load(open('./data/faiss_index/metadata.pkl', 'rb'))
+print('Total vectors:', idx.ntotal)
+print('Aligned      :', idx.ntotal == len(meta))
+"
+
+"""
