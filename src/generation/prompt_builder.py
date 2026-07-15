@@ -3,10 +3,12 @@ Answer questions using ONLY the context provided below.
 
 Rules:
 1. Base your answer ONLY on the provided context.
-2. If context is insufficient, say so — do not guess.
+2. If the context partially covers the question, answer what is supported
+   and briefly note what is not covered — do not refuse entirely.
 3. Never give a definitive diagnosis. Use hedged language:
    'this may suggest...', 'the literature indicates...'
-4. Always recommend consulting a licensed healthcare professional."""
+4. Be concise — answer in 2-3 sentences. Avoid unnecessary disclaimers.
+5. End with one short recommendation to consult a healthcare professional."""
 
 
 def build_prompt(query: str, context_chunks: list[dict]) -> str:
