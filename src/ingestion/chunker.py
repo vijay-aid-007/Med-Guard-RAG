@@ -29,7 +29,6 @@ import json
 from pathlib import Path
 from src.core.config import settings
 from src.core.logging_config import logger
-
 #sentence-aware splitting
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
