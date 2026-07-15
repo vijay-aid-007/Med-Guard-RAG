@@ -34,3 +34,4 @@ data/faiss_index/
 
 # Processed data
 data/processed/
+data/faiss_index/*.index

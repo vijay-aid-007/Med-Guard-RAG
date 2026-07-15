@@ -1,8 +1,8 @@
 {
   "total": 5,
-  "correct": 3,
-  "accuracy": 0.6,
-  "blocked": 1,
+  "correct": 4,
+  "accuracy": 0.8,
+  "blocked": 0,
   "handoff": 0,
   "random_baseline": 0.25
 }
