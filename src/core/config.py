@@ -63,6 +63,16 @@ class Settings(BaseSettings):
     input_similarity_threshold: float = Field(default=0.50)
 
 
+    # ── Notifications ──────────────────────────────────────────────────
+    slack_webhook_url: str = Field(default="")
+    smtp_host:         str = Field(default="")
+    smtp_user:         str = Field(default="")
+    smtp_password:     str = Field(default="")
+    handoff_email:     str = Field(default="")
+
+    # ── Guardrails ─────────────────────────────────────────────────────
+    input_similarity_threshold: float = Field(default=0.50)
+
 settings = Settings()
 
 
