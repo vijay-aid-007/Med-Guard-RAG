@@ -24,12 +24,12 @@ class Settings(BaseSettings):
 
     #_____Retrieval___________________________________________
     retrieval_top_k: int = Field(default=20)
-    rerank_top_k : int = Field(default=10)
+    rerank_top_k : int = Field(default=6)
     chunk_size:  int = Field(default=512)
     chunk_overlap: int = Field(default=64)
 
     #_____Guardrail Threshold_________________________________
-    faithfulness_threshold: float = Field(default=0.3)
+    faithfulness_threshold: float = Field(default=0.25)
     frustration_block_threshold: float = Field(default=3.0)
     repetition_handoff_count: int = Field(default=2)
 

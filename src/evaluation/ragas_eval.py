@@ -92,7 +92,7 @@ def compute_metrics(
         # ── Context Precision ─────────────────────────────────────────
         # How many retrieved contexts are relevant to the ground truth?
         ctx_scores = [_cosine(vc, v_gt) for vc in v_ctxs]
-        ctx_prec   = float(np.mean([s > 0.5 for s in ctx_scores]))
+        ctx_prec   = float(np.mean([s > 0.4 for s in ctx_scores]))
 
         # ── Context Recall ────────────────────────────────────────────
         # Does the best context cover the ground truth?

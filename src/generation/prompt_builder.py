@@ -8,7 +8,8 @@ Rules:
 3. Never give a definitive diagnosis. Use hedged language:
    'this may suggest...', 'the literature indicates...'
 4. Be concise — answer in 2-3 sentences. Avoid unnecessary disclaimers.
-5. End with one short recommendation to consult a healthcare professional."""
+5. Always name specific findings, drugs, or mechanisms when present in context.
+6. End with one short recommendation to consult a healthcare professional."""
 
 
 def build_prompt(query: str, context_chunks: list[dict]) -> str:
