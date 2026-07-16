@@ -21,127 +21,7 @@ HuggingFace `datasets.load_dataset()` streams and caches automatically.
 We flatten PubMedQA's structured abstract (background/methods/results/
 conclusion) into a single text block since that's what gets embedded.
 """
-
-# import json
-# from pathlib import Path
-# from datasets import load_dataset
-# from src.core.logging_config import logger 
-
-
-
-# RAW_DIR = Path("data/raw")
-# RAW_DIR.mkdir(parents = True, exist_ok= True)
-
-# def load_pubmedqa(limit: int = 1000) -> list[dict]:
-#     logger.info('Loading PubMedQA.....')
-    
-#     ds = load_dataset(
-#         "qiaojin/PubMedQA", "pqa_labeled", split='train'
-#     )
-
-#     ds = ds.select(range(min(limit, len(ds))))      # type: ignore[arg-type]#because the dataset type isn't always Sized
-
-#     docs = []
-#     for row in ds:
-#         row = dict(row)
-#         contexts = row.get('context', {})
-#         labels = contexts.get('labels', [])
-#         sections = contexts.get('contexts', [])
-
-#         abstract = "\n".join(
-#             f"{lbl} : {txt}"
-#             for lbl, txt in zip(labels, sections)
-#         )
-
-#         full_text = (
-#             f"Question : {row['question']}\n\n"
-#             f"Abstract : \n {abstract} \n\n"
-#             f"Conslusion : {row.get('long_answer', '')}"
-#         )
-
-#         docs.append({
-#             "id" :   f"pubmedqa_{row['pubid']}",
-#             "text" :    full_text,
-#             "source": "PubMedQA",
-#             "metadata" : {
-#                 "answer_label": row.get('final_decision', ''),
-#                 "pubid" : row['pubid'],
-#             },
-#         })
-
-#     logger.info(f"Loaded {len(docs)} PubMedQA documents")
-#     return docs
-
-
-# def load_medmcqa(limit: int = 3000) -> list[dict]:
-#     logger.info('Loading MedMCQA.....')
-
-#     ds = load_dataset(
-#         "openlifescienceai/medmcqa", split="train"
-#     )
-
-#     ds = ds.select(range(min(limit, len(ds))))      # type: ignore[arg-type]
-
-#     opt_map = {0: "opa", 1: "opb", 2: "opc", 3: "opd"}
-    
-#     docs = []
-#     for row in ds:
-#         row = dict(row)
-#         explanation = row.get("exp", "") or ""
-#         if not explanation.strip():
-#             continue
-
-#         correct_key = opt_map.get(row.get("cop", -1), "")
-#         correct_answer = row.get(correct_key, "")
-
-#         full_text = (
-#             f"Question: {row['question']}\n\n"
-#             f"Correct answer: {correct_answer}\n\n"
-#             f"Explanation: {explanation}"
-#         )
-
-#         docs.append({
-#             "id":       f"medmcqa_{row['id']}",
-#             "text":     full_text,
-#             "source":   "MedMCQA",
-#             "metadata": {
-#                 "subject": row.get("subject_name", "unknown"),
-#                 "topic":   row.get("topic_name",   "unknown"),
-#             },
-#         })
-
-#     logger.info(f"Loaded {len(docs)} MedMCQA documents")
-#     return docs
-
-
-# def save_json1(docs: list[dict], filename : str) -> None:
-#     path = RAW_DIR / filename
-#     with open(path, "w", encoding='utf-8') as f:
-#         for doc in docs:
-#             f.write(json.dumps(doc, ensure_ascii=False) + "\n")
-#     logger.info(f"Saved {len(docs)} docs -> {path}")
-
-# def main():
-#     pubmed = load_pubmedqa(limit=1000)
-#     mcqa = load_medmcqa(limit=3000)
-
-#     save_json1(pubmed, "pubmedqa.json1")
-#     save_json1(mcqa, "medmcqa.json1")
-
-#     combined = pubmed + mcqa
-#     save_json1(combined, "combined_corpus.json1")
-#     logger.info(f"Total Corpus: {len(combined)} Documents")
-
-
-# if __name__ == "__main__":
-#     main()
-
-    
-
-
-
-
-
+   
 import json
 from pathlib import Path
 from typing import Any
@@ -243,6 +123,70 @@ def load_pubmed_abstracts(limit: int = 10000) -> list[dict]:
         })
 
     logger.info(f"Loaded {len(docs)} PubMed abstracts")
+    return docs
+
+
+def load_mechanism_abstracts(limit: int = 5000) -> list[dict]:
+    """
+    PubMed abstracts filtered for mechanism-rich content.
+    Fills the gap left by exam datasets (MedMCQA/MedQA) which explain
+    WHAT drug to use but not HOW/WHY it works at molecular level.
+
+    Targets: AMPK pathways, adipokines, pharmacokinetics, receptor mechanisms,
+    insulin signaling, inflammatory pathways — exactly what eval questions need.
+    """
+    logger.info("Loading mechanism-rich PubMed abstracts...")
+
+    MECHANISM_KEYWORDS = [
+        # Drug mechanisms
+        "mechanism of action", "ampk", "gluconeogenesis",
+        "hepatic glucose", "insulin sensitivity", "biguanide",
+        "pharmacokinetics", "receptor antagonist", "enzyme inhibitor",
+        "beta-adrenergic", "renin angiotensin", "ace inhibitor",
+        "metformin mechanism", "hepatic gluconeogenesis",
+
+        # Obesity/metabolic pathways
+        "adipokine", "leptin", "adiponectin", "visceral adipose",
+        "insulin signaling", "inflammatory pathway", "cytokine",
+        "free fatty acid", "lipotoxicity", "metabolic syndrome",
+        "insulin resistance mechanism",
+
+        # General mechanisms
+        "pathophysiology", "molecular mechanism", "signaling pathway",
+        "protein kinase", "oxidative stress", "gene expression",
+    ]
+
+    try:
+        rows = _load("ccdv/pubmed-summarization", None, "train", limit * 4)
+    except Exception as e:
+        logger.warning(f"Mechanism abstracts load failed: {e} — skipping")
+        return []
+
+    docs = []
+    for i, row in enumerate(rows):
+        if len(docs) >= limit:
+            break
+
+        row_: dict = dict(row)
+        abstract = str(row_.get("abstract") or "").strip()
+        article  = str(row_.get("article")  or "").strip()
+        content  = abstract if abstract else article
+
+        if not content or len(content) < 100:
+            continue
+
+        content_lower = content.lower()
+        if not any(kw.lower() in content_lower for kw in MECHANISM_KEYWORDS):
+            continue
+
+        docs.append({
+            "id":       f"pubmed_mechanism_{i}",
+            "text":     content,
+            "source":   "PubMedMechanism",
+            "metadata": {"type": "mechanism_abstract"},
+        })
+
+    logger.info(f"Loaded {len(docs)} mechanism-rich abstracts")
     return docs
 
 
