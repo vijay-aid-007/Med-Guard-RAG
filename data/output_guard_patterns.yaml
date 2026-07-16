@@ -1,0 +1,36 @@
+# ═══════════════════════════════════════════════════════════════════
+# MedGuard — Output Guardrail Patterns
+# Ops team can update without code changes or redeploy.
+# ═══════════════════════════════════════════════════════════════════
+
+toxic:
+  # ── Direct harm language ──────────────────────────────────────────
+  - "\\b(kill yourself|kys)\\b"
+  - "\\byou (deserve|should) (to )?die\\b"
+  - "\\bnobody (cares|likes) you\\b"
+  - "\\byou are (worthless|pathetic|hopeless|a burden)\\b"
+  - "\\b(end|take) your (life|own life)\\b"
+  - "\\byou (would be|are) better off dead\\b"
+  - "\\bgo (harm|hurt|kill) yourself\\b"
+
+overconfident:
+  # ── Definitive diagnosis language ─────────────────────────────────
+  - "\\byou (definitely|certainly|absolutely) have\\b"
+  - "\\bthis confirms (you have|the diagnosis of)\\b"
+  - "\\byou are (definitely|certainly|absolutely) (diagnosed|suffering from)\\b"
+  - "\\b(without|beyond) (any |a )?(doubt|question) you have\\b"
+  - "\\bi (can confirm|am (certain|sure|confident)) (you have|this is)\\b"
+  - "\\bthis (is|means) you have\\b"
+  - "\\byou (must|will) (have|develop|get) (this|the)\\b"
+  - "\\bthe (diagnosis|test) (proves|confirms|shows) you have\\b"
+  - "\\byou (100%|definitely|certainly) (have|suffer from)\\b"
+  - "\\bno (doubt|question) (that )?you have\\b"
+
+unsafe_advice:
+  # ── Direct medication instructions without professional guidance ───
+  - "^(take|stop|start|increase|decrease|double|halve|skip).{0,60}(medication|drug|dose|pill|tablet|capsule|injection)"
+  - "\\byou should (immediately|now|right away) (take|stop|start|double|increase|decrease).{0,40}(medication|drug|dose|pill)"
+  - "\\b(stop|discontinue|quit) (taking|your) .{0,30}(medication|drug|pill) (immediately|now|without telling)"
+  - "\\b(increase|double|triple) (your|the) (dose|dosage|medication) (without|before)"
+  - "\\bdo not (consult|see|visit|call) (a |your )?(doctor|physician|healthcare)"
+  - "\\byou do not need (a |to see a )?(doctor|physician|professional|prescription)"
