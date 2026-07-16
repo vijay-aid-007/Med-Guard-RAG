@@ -1,0 +1,40 @@
+# MedGuard RAG — Prometheus Configuration
+global:
+  scrape_interval:     15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: medguard-rag
+    environment: production
+
+# ── Alerting ──────────────────────────────────────────────────────────
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+# ── Scrape Configs ────────────────────────────────────────────────────
+scrape_configs:
+
+  # MedGuard API metrics
+  - job_name: medguard-api
+    static_configs:
+      - targets: ["api:8000"]
+    metrics_path: /metrics
+    scrape_interval: 15s
+
+  # Prometheus self-monitoring
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # PostgreSQL metrics (via postgres_exporter)
+  - job_name: postgres
+    static_configs:
+      - targets: ["postgres:5432"]
+    scrape_interval: 30s
+
+  # Redis metrics (via redis_exporter)
+  - job_name: redis
+    static_configs:
+      - targets: ["redis:6379"]
+    scrape_interval: 30s
