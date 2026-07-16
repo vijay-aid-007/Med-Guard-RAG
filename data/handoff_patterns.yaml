@@ -1,0 +1,49 @@
+# ═══════════════════════════════════════════════════════════════════
+# MedGuard — Human Handoff Patterns
+# ═══════════════════════════════════════════════════════════════════
+
+negative:
+  - "\\bwrong\\b"
+  - "\\bnot helpful\\b"
+  - "\\bbad answer\\b"
+  - "\\buseless\\b"
+  - "\\bdoesn'?t (help|make sense)\\b"
+  - "\\bstill (confused|don'?t understand)\\b"
+  - "\\bthat('s| is) (incorrect|wrong|not right)\\b"
+  - "\\byou (don'?t|didn'?t) (understand|answer)\\b"
+  - "\\bterrible (answer|response)\\b"
+  - "\\bcompletely (wrong|incorrect|off)\\b"
+  - "\\bnot what i (asked|wanted|needed)\\b"
+  - "\\bthis (doesn'?t|did not) help\\b"
+  - "\\bi (don'?t|didn'?t) (understand|get) (this|that|it)\\b"
+  - "\\bworse than useless\\b"
+
+positive:
+  - "\\bthanks?\\b"
+  - "\\bthat helps?\\b"
+  - "\\bgot it\\b"
+  - "\\bmakes sense\\b"
+  - "\\bperfect\\b"
+  - "\\bgreat\\b"
+  - "\\bexcellent\\b"
+  - "\\bthank you\\b"
+  - "\\bvery helpful\\b"
+  - "\\bappreciate (it|that|this)\\b"
+  - "\\bwonderful\\b"
+  - "\\bawesome\\b"
+  - "\\bthat('s| is) (clear|helpful|exactly what i needed)\\b"
+  - "\\bnow i (understand|get it)\\b"
+
+handoff_request:
+  - "\\btalk to (a )?human\\b"
+  - "\\bconnect me to (an? )?agent\\b"
+  - "\\bspeak (to|with) (a )?(doctor|person|human|agent|representative)\\b"
+  - "\\breal (doctor|person|human|agent)\\b"
+  - "\\bhuman (support|agent|representative|help)\\b"
+  - "\\bi (want|need|would like) (to speak|to talk) (with|to) (a |)(human|person|doctor|agent)\\b"
+  - "\\bescalate (this|my (issue|case|question))\\b"
+  - "\\b(get|speak to|transfer to) (a )?supervisor\\b"
+  - "\\bi (want|need) (a |)(real|actual|human) (doctor|physician|medical professional)\\b"
+  - "\\bcan (i|you) (get|have|speak to) (a |)(human|person|doctor)\\b"
+  - "\\btransfer (me|this) to (a |)(human|agent|doctor|person)\\b"
+  - "\\bi need (a |)(real|actual) (person|human|doctor|physician)\\b"
