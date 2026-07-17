@@ -1,7 +1,5 @@
-# ═══════════════════════════════════════════════════════════════════
 # MedGuard RAG — Production Dockerfile
 # Multi-stage build: keeps final image lean (~1.2GB vs ~3GB)
-# ═══════════════════════════════════════════════════════════════════
 
 # ── Stage 1: Builder ─────────────────────────────────────────────────
 FROM python:3.11-slim AS builder
