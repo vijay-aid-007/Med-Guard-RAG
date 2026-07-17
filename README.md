@@ -325,7 +325,7 @@ Edit YAML → restart API → changes live. No redeploy needed.
 
 ## Author
 
-**Vijay** — AI/ML Engineer (2026 Batch, B.Tech CSE + PGP Data Science)
+**Vijay** — AI/ML Engineer (2026 Batch, B.Tech CSE (AI & DS) + PGP Data Science)
 
 - GitHub: [@vijay-aid-007](https://github.com/vijay-aid-007)
 - HuggingFace: [@vijay036](https://huggingface.co/vijay036)
